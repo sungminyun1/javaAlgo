@@ -3,7 +3,7 @@ package gold;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class P1238 {
@@ -21,6 +21,10 @@ public class P1238 {
         X = Integer.parseInt(st.nextToken());
 
         MAP = new int[N + 1][N + 1];
+        for(int i =0; i<N+1; i++){
+            Arrays.fill(MAP[i], Integer.MAX_VALUE);
+        }
+
         for(int i = 0; i<M; i++){
             st = new StringTokenizer(br.readLine(), " ");
             int start = Integer.parseInt(st.nextToken());
@@ -28,45 +32,55 @@ public class P1238 {
             int cost = Integer.parseInt(st.nextToken());
             MAP[start][dest] = cost;
         }
-        for(int i = 1;i<=N; i++){
-            int tMax = BFS(i,X,new int[N+1]);
-            int tMax2 = BFS(X,i,new int[N+1]);
-            MAX = Math.max(MAX,tMax+tMax2);
+
+        for(int i=1; i<=N; i++){
+            int maxCandi = Dijkstra(i, X) + Dijkstra(X, i);
+            MAX = Math.max(MAX, maxCandi);
         }
+
         System.out.println(MAX);
     }
 
-    private static int BFS(int start,int dest, int[] visited){
-        double result = Double.POSITIVE_INFINITY;
-        Stack<int[]> needVisit = new Stack<>();
-        for(int i = 1; i<=N; i++){
-            visited[i] = (int)Double.POSITIVE_INFINITY;
-            if(MAP[start][i] != 0){
-                int[] val = {i,MAP[start][i]};
-                needVisit.push(val);
-            }
+    public static int Dijkstra(int start, int dest){
+        int[] visited = new int[N+1];
+        int[] shortWay = new int[N+1];
+        for(int i =1; i<=N; i++){
+            shortWay[i] = MAP[start][i];
         }
-        visited[start] = -1;
-        while(needVisit.size() != 0){
-            int[] val = needVisit.pop();
-            int now = val[0];
-            int cost = val[1];
-            if(now == dest){
-                result = Math.min(result,cost);
-                continue;
+        visited[start] = 1;
+        while(true){
+            if(isDone(visited)){
+                break;
             }
-            if (visited[now] < cost){
-                continue;
+            int t_min = Integer.MAX_VALUE;
+            int nextIdx = 0;
+            for(int i=1; i<shortWay.length; i++){
+                if(visited[i] == 0 && shortWay[i] < t_min){
+                    t_min = shortWay[i];
+                    nextIdx = i;
+                }
             }
-            visited[now] = cost;
-            for(int i=1; i<=N; i++){
-                if(MAP[now][i] != 0 ){
-                    int[] next = {i,cost + MAP[now][i]};
-                    needVisit.push(next);
+
+            visited[nextIdx] = 1;
+            for(int i =1; i<=N; i++){
+                if(MAP[nextIdx][i] != Integer.MAX_VALUE){
+                    int candi = shortWay[nextIdx] + MAP[nextIdx][i];
+                    if(candi < shortWay[i]){
+                        shortWay[i] = candi;
+                    }
                 }
             }
         }
-        return (int)result;
+
+        return shortWay[dest];
     }
 
+    public static boolean isDone(int[] visited){
+        for(int i =1; i<visited.length; i++){
+            if(visited[i] == 0){
+                return false;
+            }
+        }
+        return true;
+    }
 }
