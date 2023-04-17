@@ -10,6 +10,8 @@ public class P1504 {
     public static int[] dist,distV1,distV2;
     public static List<List<Node>> graph;
 
+    public static int MAX_VAL = 20000000;
+
     static class Node implements Comparable<Node>{
         int index;
         int dist;
@@ -56,7 +58,7 @@ public class P1504 {
 
     public static int[] Di(int start){
         int[] result = new int[N+1];
-        Arrays.fill(result, Integer.MAX_VALUE);
+        Arrays.fill(result, MAX_VAL);
 
         boolean[] visited = new boolean[N + 1];
         Arrays.fill(visited, false);
@@ -88,10 +90,22 @@ public class P1504 {
         int case1 = d2[1] + d3[V1] + d1[V2];
         //v2 v1 N
         int case2 =  d3[1] + d2[V2] + d1[V1];
+        //N v1 v2 N
+        int case3 = d1[1] + d2[N] + d3[V1] + d1[V2];
+        //N v2 v1 N
+        int case4 = d1[1] + d3[N] + d2[V2] + d1[V1];
+        //N v1 N v2 N
+        int case5 = d1[1] + d2[N] + d1[V1] + d3[N] + d1[V2];
+        //N v2 N v1 N
+        int case6 = d1[1] + d3[N] + d1[V2] + d2[N] + d1[V1];
 
-        if(case1 == Integer.MAX_VALUE && case2 == Integer.MAX_VALUE){
+        if(
+                case1 >= MAX_VAL && case2 >= MAX_VAL
+                && case3 >= MAX_VAL && case4 >= MAX_VAL
+                && case5 >= MAX_VAL && case6 >= MAX_VAL
+        ){
             return -1;
         }
-        return Math.min(case1, case2);
+        return Math.min( Math.min( Math.min(case1, case2), Math.min(case3,case4) ), Math.min(case5,case6) );
     }
 }
