@@ -26,11 +26,23 @@ public class P6 {
                     continue;
                 }
 
-                int std1Idx = Arrays.asList(fruit[std1]).indexOf(std1Min);
-                int std2Idx = Arrays.asList(fruit[std2]).indexOf(std2Min);
+                int std1Idx = getIndex(fruit[std1],std1Min);
+                int std2Idx = getIndex(fruit[std2],std2Min);
+                if(std1Idx == std2Idx) continue;
 
+                if(fruit[std1][std1Idx] +1 < fruit[std1][std2Idx] -1 && fruit[std2][std2Idx] +1 < fruit[std2][std1Idx]){
+                    answer += fruit[std1][std1Idx] +1;
+                    answer += fruit[std2][std2Idx] +1;
+                    avail[std1] = false;
+                    avail[std2] = false;
+                    break;
+                }
+            }
+        }
 
-
+        for(int i =0; i< avail.length; i++){
+            if(avail[i]){
+                answer += getMin(fruit[i]);
             }
         }
 
@@ -51,6 +63,13 @@ public class P6 {
         return result;
     }
 
+    public static int getIndex(int[] arr, int val){
+        for(int i =0; i<arr.length; i++){
+            if(arr[i] == val) return i;
+        }
+
+        return -1;
+    }
     public static boolean uniqMin(int[] arr, int min){
         int count = 0;
         for(int i =0; i<arr.length; i++){
@@ -64,11 +83,4 @@ public class P6 {
         return true;
     }
 
-    public static int getMax(int[] arr){
-        int result = arr[0];
-        for(int i=1; i<arr.length; i++){
-            if(arr[i] > result) result = arr[i];
-        }
-        return result;
-    }
 }
