@@ -24,48 +24,33 @@ public class P16637 {
                 OPERS[i/2] = input.charAt(i);
             }
         }
-        find(0,0);
-    }
-    public static void find(int level, int start){
+        DFS(0,NUMS[0]);
 
+        System.out.println(result);
     }
-
-    public static int calc(){
-        int res = 0;
-        for(int i =0; i<visited.length; i++){
-            if(visited[i]){
-                switch(OPERS[i]){
-                    case '+':
-                        NUMS[i] += NUMS[i+1];
-                        NUMS[i+1] = NUMS[i];
-                        break;
-                    case '-':
-                        NUMS[i] -= NUMS[i+1];
-                        NUMS[i+1] = NUMS[i];
-                        break;
-                    case '*':
-                        NUMS[i] *= NUMS[i+1];
-                        NUMS[i+1] = NUMS[i];
-                        break;
-                }
-            }
+    public static void DFS(int idx, int sum){
+        if(idx >= N/2){
+            result = Math.max(result,sum);
+            return;
         }
-        for(int i =0; i<visited.length; i++){
-            if(!visited[i]){
-                switch(OPERS[i]){
-                    case '+':
-                        result += NUMS[i] + NUMS[i+1];
-                        break;
-                    case '-':
-                        NUMS[i] -= NUMS[i+1];
-                        NUMS[i+1] = NUMS[i];
-                        break;
-                    case '*':
-                        NUMS[i] *= NUMS[i+1];
-                        NUMS[i+1] = NUMS[i];
-                        break;
-                }
-            }
+
+        int res1 = calc(sum,NUMS[idx+1],OPERS[idx]);
+        DFS(idx + 1, res1);
+
+        if(idx < N/2 -1){
+            int res2 = calc(NUMS[idx + 1], NUMS[idx + 2], OPERS[idx + 1]);
+            DFS(idx + 2, calc(sum, res2, OPERS[idx]));
+        }
+
+    }
+
+    public static int calc(int val1, int val2, char oper){
+        if(oper == '+'){
+            return val1 + val2;
+        }else if(oper == '-'){
+            return val1-val2;
+        }else if(oper == '*'){
+            return val1*val2;
         }
         return 0;
     }
