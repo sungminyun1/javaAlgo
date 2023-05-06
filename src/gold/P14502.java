@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class P14502 {
@@ -35,6 +36,24 @@ public class P14502 {
             }
         }
 
+        for(int i =0; i<avail.size() -2; i++){
+            for (int j = i + 1; j < avail.size() - 1; j++) {
+                for (int k = j + 1; k < avail.size(); k++) {
+                    int[][] tBoard = new int[N][];
+                    for(int m =0; m<N; m++){
+                        tBoard[m] = Board[m].clone();
+                    }
+                    tBoard[avail.get(i).get(0)][avail.get(i).get(1)] = 1;
+                    tBoard[avail.get(j).get(0)][avail.get(j).get(1)] = 1;
+                    tBoard[avail.get(k).get(0)][avail.get(k).get(1)] = 1;
+                    spread(tBoard);
+                }
+            }
+        }
 
+    }
+
+    public static void spread(int[][] board){
+        System.out.println("hi");
     }
 }
