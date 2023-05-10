@@ -14,6 +14,7 @@ public class P178871 {
             map.put(players[idx], idx);
             map.put(players[idx-1],idx-1);
         }
+        System.out.println();
         return players;
     }
 }
