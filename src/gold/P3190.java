@@ -12,7 +12,7 @@ public class P3190 {
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static int[][] board;
     public static HashMap<Integer,String > change = new HashMap<>();
-    public static Queue<Integer[]> snake = new LinkedList<>();
+    public static Queue<Integer> snake = new LinkedList<>();
     public static void main(String[] args) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
 
@@ -42,13 +42,9 @@ public class P3190 {
                 {0,-1},
         };
         int dirNow = 1;
-        Integer[] first = {0,0};
-        snake.offer(first);
-        board[0][0] = 2;
+        snake.offer(0);
         int headRow = 0;
         int headCol = 0;
-        int tailRow = 0;
-        int tailCol = 0;
         int time = 0;
         while(true){
             if(change.get(time) != null){
@@ -65,24 +61,12 @@ public class P3190 {
             headRow += dir[dirNow][0];
             headCol += dir[dirNow][1];
 
-            if(headRow <0 || headRow >= boardSize || headCol <0 || headCol >= boardSize || board[headRow][headCol] == 2){
+            if(headRow <0 || headRow >= boardSize || headCol <0 || headCol >= boardSize || snake.contains(headRow*boardSize + headCol)){
                 break;
             }
-            if(board[headRow][headCol] == 0){
-                board[tailRow][tailCol] = 0;
-                board[headRow][headCol] = 2;
-                if(tailRow - 1 > 0 && board[tailRow-1][tailCol] == 2){
-                    tailRow -= 1;
-                }else if(tailRow +1 <boardSize && board[tailRow+1][tailCol] == 2){
-                    tailRow += 1;
-                }else if(tailCol -1 > 0 && board[tailRow][tailCol -1] == 2){
-                    tailCol -= 1;
-                }else if(tailCol +1 < boardSize && board[tailRow][tailCol +1] == 2){
-                    tailCol += 1;
-                }
-            }else {
-                board[headRow][headCol] = 2;
-            }
+            snake.offer(headRow*boardSize + headCol);
+            if(board[headRow][headCol] == 0) snake.poll();
+            if(board[headRow][headCol] == 1) board[headRow][headCol] = 0;
         }
         System.out.println(time);
     }
