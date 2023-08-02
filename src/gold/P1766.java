@@ -3,61 +3,44 @@ package gold;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class P1766 {
-    public static class Node implements Comparable<Node>{
-        public Queue<Integer> q;
-        public Node(Queue<Integer> q){
-            this.q = q;
-        }
-
-        @Override
-        public int compareTo(Node o) {
-            return q.peek() - o.q.peek();
-        }
-    }
-
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    public static PriorityQueue<Node> pq = new PriorityQueue<>();
     public static void main(String[] args) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        boolean[] needPrev = new boolean[N+1];
-        HashMap<Integer,Integer> graph = new HashMap<>();
+        int[] count = new int[N+1];
+        HashMap<Integer,ArrayList<Integer>> graph = new HashMap<>();
 
         for(int i =0; i< M; i++){
             st = new StringTokenizer(br.readLine());
             int prev = Integer.parseInt(st.nextToken());
             int post = Integer.parseInt(st.nextToken());
-            needPrev[post] = true;
-            graph.put(prev, post);
+            count[post] += 1;
+            if(graph.get(prev) == null) graph.put(prev, new ArrayList<Integer>());
+            graph.get(prev).add(post);
         }
-
-        for(int i =1; i<N+1; i++){
-            if(!needPrev[i]){
-                Queue<Integer> q = new LinkedList<>();
-                q.offer(i);
-                Integer now = graph.get(i);
-                while(now != null){
-                    q.offer(now);
-                    now = graph.get(now);
-                }
-                Node n = new Node(q);
-                pq.add(n);
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for(int i =1; i<count.length; i++){
+            if(count[i] == 0){
+                pq.add(i);
             }
         }
-
         ArrayList<String> answer = new ArrayList<>();
         while(pq.size() > 0){
-            Node cn = pq.poll();
-            Queue<Integer> cq = cn.q;
-            answer.add("" + cq.poll());
-            if(cq.size()>0){
-                pq.add(cn);
+            int now = pq.poll();
+            answer.add(""+now);
+            ArrayList<Integer> nowArr = graph.get(now);
+            if(nowArr != null){
+                for (int i : nowArr) {
+                    count[i]--;
+                    if(count[i] == 0) pq.add(i);
+                }
             }
         }
-       System.out.println(String.join(" ",answer));
+        System.out.println(String.join(" ",answer));
     }
 }
