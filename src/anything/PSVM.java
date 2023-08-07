@@ -3,14 +3,26 @@ package anything;
 import java.util.*;
 
 public class PSVM {
+    public static int val = 1;
     public static void main(String[] args) {
-        ArrayList<Integer> a = new ArrayList<>();
-        System.out.println(a);
-        Queue<Integer> q = new LinkedList<>();
-        q.offer(1);
-        q.offer(2);
-        q.offer(3);
-        System.out.println(q);
-        System.out.println(q.peek());
+        PSVM p = new P2();
+        p.run();
+        System.out.println(p.val);
+
+        P2 p2 = new P2();
+        p2.run();
+        System.out.println(p2.val);
+    }
+    public void run(){
+        System.out.println("psvm run");
+    }
+
+    public static class P2 extends PSVM{
+        public static int val = 2;
+        public void run(){
+            System.out.println("p2 run");
+        }
     }
 }
+
+
