@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.StringTokenizer;
 
 public class P1406 {
@@ -15,9 +16,12 @@ public class P1406 {
         int N = Integer.parseInt(st.nextToken());
 
         LinkedList<Character> list = new LinkedList<>();
-        int cur = input.length();
         for(int i =0; i<input.length(); i++){
             list.add(input.charAt(i));
+        }
+        ListIterator<Character> iter = list.listIterator();
+        while(iter.hasNext()){
+            iter.next();
         }
 
         for(int i =0; i<N; i++){
@@ -25,16 +29,20 @@ public class P1406 {
             String now = st.nextToken();
             char cmd = now.charAt(0);
             if(cmd == 'L'){
-                cur = Math.max(0,cur-1);
+                if(iter.hasPrevious()){
+                    iter.previous();
+                }
             }else if(cmd == 'D'){
-                cur = Math.min(list.size(), cur+1);
+                if(iter.hasNext()){
+                    iter.next();
+                }
             }else if(cmd == 'B'){
-                if(cur > 0){
-                    list.remove(cur-1);
-                    cur--;
+                if(iter.hasPrevious()){
+                    iter.previous();
+                    iter.remove();
                 }
             }else if(cmd == 'P'){
-                list.add(cur++, st.nextToken().charAt(0));
+                iter.add(st.nextToken().charAt(0));
             }
         }
         StringBuilder sb = new StringBuilder();
