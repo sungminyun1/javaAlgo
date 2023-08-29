@@ -11,11 +11,11 @@ public class P2146 {
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static int N;
     public static int[][] board;
-    public static int[][][] dist;
+    public static int[] dx = {-1, 1, 0, 0};
+    public static int[] dy = {0, 0, -1, 1};
     public static void main(String[] args) throws IOException {
         N = Integer.parseInt(br.readLine());
         board = new int[N][N];
-        dist = new int[N][N][2];
 
         for (int i = 0; i < N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -23,12 +23,10 @@ public class P2146 {
                 board[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
+
 
         int token = 2;
         Queue<Integer[]> nv = new LinkedList<>();
-        Queue<Integer[]> nv2 = new LinkedList<>();
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 if(board[i][j] == 1){
@@ -44,10 +42,6 @@ public class P2146 {
                             if(board[nx][ny] == 1){
                                 board[nx][ny] = token;
                                 nv.add(new Integer[]{nx, ny});
-                            }else if(board[nx][ny] == 0 && dist[nx][ny][0] == 0){
-                                dist[nx][ny][0] = 1;
-                                dist[nx][ny][1] = token;
-                                nv2.add(new Integer[]{nx, ny, token});
                             }
                         }
                     }
@@ -55,21 +49,54 @@ public class P2146 {
                 }
             }
         }
-        while (!nv2.isEmpty()) {
-            Integer[] now = nv2.poll();
-            for (int i = 0; i < 4; i++) {
-                int nx = now[0] + dx[i];
-                int ny = now[1] + dy[i];
-                if(nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
-                if(dist[nx][ny][0] == 0 && board[nx][ny] > 1){
-                    dist[nx][ny][0] = dist[now[0]][now[1]][0] +1;
-                    dist[nx][ny][1] = now[2];
-                    nv2.add(new Integer[]{nx, ny, now[2]});
-                }else if(dist[nx][ny][0] > 0 && dist[nx][ny][1] != now[2]){
-                    System.out.println(dist[nx][ny][0] + dist[now[0]][now[1]][0]);
-                    return;
+
+        int res = 100000;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if(board[i][j] > 1 && needCheck(i, j)){
+                    int t = run(i, j);
+                    res = Math.min(res, t);
                 }
             }
         }
+
+        System.out.println(res);
+    }
+
+    public static boolean needCheck(int i, int j){
+        for (int k = 0; k < 4; k++) {
+            int nx = i + dx[k];
+            int ny = j + dy[k];
+            if(nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
+            if(board[nx][ny] == 0) return true;
+        }
+        return false;
+    }
+
+    public static int run(int row, int col){
+        int token = board[row][col];
+        Queue<Integer[]> nv = new LinkedList<>();
+        int[][] dist = new int[N][N];
+
+        dist[row][col] = 1;
+        nv.add(new Integer[]{row, col});
+
+        while (!nv.isEmpty()) {
+            Integer[] now = nv.poll();
+            for (int i = 0; i < 4; i++) {
+                int nx = now[0] + dx[i];
+                int ny = now[1] + dy[i];
+                if(nx < 0 || nx >= N || ny < 0 || ny >= N || dist[nx][ny] > 0) continue;
+                if (board[nx][ny] > 0 && board[nx][ny] != token) {
+                    return dist[now[0]][now[1]] -1;
+                } else if(board[nx][ny] == 0 && dist[nx][ny] == 0){
+                    dist[nx][ny] = dist[now[0]][now[1]] +1;
+                    nv.add(new Integer[]{nx, ny});
+                }
+            }
+        }
+
+        return 100000;
     }
 }
