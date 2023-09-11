@@ -7,20 +7,20 @@ import java.util.Arrays;
 
 public class P11652 {
     public static int N;
-    public static int[] arr;
+    public static long[] arr;
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static void main(String[] args) throws IOException {
         N = Integer.parseInt(br.readLine());
-        arr = new int[N];
+        arr = new long[N];
         for (int i = 0; i < N; i++) {
-            int val = Integer.parseInt(br.readLine());
+            long val = Long.parseLong(br.readLine());
             arr[i] = val;
         }
         Arrays.sort(arr);
-        int maxNum = arr[0];
+        long maxNum = arr[0];
         int maxCount = 0;
 
-        int nowNum = arr[0];
+        long nowNum = arr[0];
         int nowCount = 0;
         for (int i = 0; i < arr.length; i++) {
             if(arr[i] == nowNum){
