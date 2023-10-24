@@ -15,29 +15,28 @@ public class P1654 {
         K = Integer.parseInt(st.nextToken());
         N = Integer.parseInt(st.nextToken());
         arr = new long[K];
+        long max = 0;
         for (int i = 0; i < K; i++) {
             arr[i] = Long.parseLong(br.readLine());
+            max = Math.max(arr[i], max);
         }
-        Arrays.sort(arr);
 
-        long left = 0;
-        long right = arr[K - 1];
-        long ans = 0;
+        long left = 1;
+        long right = max;
 
-        while(left < right){
+        while(left <= right){
             long mid = (left + right) / 2;
-            int count = 0;
+            long count = 0;
             for (long i : arr) {
-                count += (int) Math.floor(i / mid);
+                count += i / mid;
             }
             if (count >= N) {
-                ans = Math.max(ans, mid);
                 left = mid + 1;
             } else{
-                right = mid;
+                right = mid - 1;
             }
         }
-        System.out.println(ans);
+        System.out.println((left + right) / 2);
 
     }
 }
