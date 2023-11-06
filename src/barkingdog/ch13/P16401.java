@@ -21,17 +21,22 @@ public class P16401 {
         }
         Arrays.sort(arr);
 
-        int m = (arr[0] + arr[N-1]) / 2;;
-        int l = 0, r = N-1;
+        int l = 1, r = arr[N-1];
+        int ans = 0;
         while(l <= r){
+            int m = (l + r) / 2;
             int sum = 0;
             for(int i : arr){
                 sum += i / m;
             }
             if(sum >= M){
-
+                ans = Math.max(ans, m);
+                l = m + 1;
+            }else{
+                r = m - 1;
             }
         }
+        System.out.println(ans);
 
     }
 }
