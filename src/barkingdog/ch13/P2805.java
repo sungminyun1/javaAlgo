@@ -8,24 +8,24 @@ import java.util.StringTokenizer;
 
 public class P2805 {
     public static int N,M;
-    public static int[] arr;
+    public static long[] arr;
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static void main(String[] args) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        arr = new int[N];
+        arr = new long[N];
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(st.nextToken());
+            arr[i] = Long.parseLong(st.nextToken());
         }
         Arrays.sort(arr);
 
-        int ans = 0, l = 1, r = arr[N - 1];
+        long ans = 0, l = 1, r = arr[N - 1];
         while (l <= r) {
-            int m = (l + r) / 2;
-            int sum = 0;
-            for (int i : arr) {
+            long m = (l + r) / 2;
+            long sum = 0;
+            for (long i : arr) {
                 if(i - m > 0){
                     sum += i - m;
                 }
