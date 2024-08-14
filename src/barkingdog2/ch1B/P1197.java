@@ -16,7 +16,7 @@ public class P1197 {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        edges = new ArrayList<>(N + 1);
+        edges = new ArrayList<>();
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int from = Integer.parseInt(st.nextToken());
