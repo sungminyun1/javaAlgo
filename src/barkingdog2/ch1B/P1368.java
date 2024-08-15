@@ -7,69 +7,52 @@ import java.util.*;
 
 public class P1368 {
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    public static int N, RESULT = 0;
-    public static boolean[] visited;
-    public static int[] nodesVal;
-    public static ArrayList<Integer> nodesOrder = new ArrayList<>();
-    public static List<ArrayList<Integer[]>> adj = new ArrayList<>();
+    public static int N, RESULT = 0, selected = 0;
+    public static int[] parent;
+    public static ArrayList<Integer[]> edges = new ArrayList<>();
     public static void main(String[] args) throws IOException {
         N = Integer.parseInt(br.readLine());
-        visited = new boolean[N];
-        nodesVal = new int[N];
-        for(int i = 0; i < N; i++) {
-            adj.add(new ArrayList<>());
-            int t = Integer.parseInt(br.readLine());
-            nodesVal[i] = t;
-            nodesOrder.add(i);
+        parent = new int[N + 1];
+
+        for(int i = 1; i <= N; i++) {
+            edges.add(new Integer[]{0, i, Integer.parseInt(br.readLine())});
+            parent[i] = i;
         }
-        for(int i = 0; i < N; i++) {
+        for (int i = 1; i <= N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            for(int j = 0; j < N; j++) {
-                int t = Integer.parseInt(st.nextToken());
-                if(t == 0) continue;
-                adj.get(i).add(new Integer[]{j, t});
+            for(int j = 1; j <= N; j++) {
+                int val = Integer.parseInt(st.nextToken());
+                if(i >= j) continue;
+                edges.add(new Integer[]{i, j, val});
             }
         }
-        nodesOrder.sort((a,b) -> nodesVal[a] - nodesVal[b]);
-        for (Integer now : nodesOrder) {
-            if(visited[now]) continue;
-            search(now);
+        edges.sort((a, b) -> a[2] - b[2]);
+
+        for(Integer[] edge : edges) {
+            if(selected == N) break;
+
+            int n1 = edge[0], n2 = edge[1], val = edge[2];
+
+            if (isSameGroup(n1, n2)) continue;
+            selected++;
+            RESULT += val;
         }
 
         System.out.println(RESULT);
     }
 
-    public static void search(Integer start){
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        pq.add(new Node(start, nodesVal[start]));
-
-        while(!pq.isEmpty()){
-            Node now = pq.poll();
-            if(visited[now.to]) continue;
-
-            visited[now.to] = true;
-            RESULT += now.val;
-
-            ArrayList<Integer[]> neighbors = adj.get(now.to);
-            for(Integer[] neighbor : neighbors) {
-                int nextIdx = neighbor[0];
-                int nextVal = neighbor[1];
-                if(visited[nextIdx] || nextVal > nodesVal[nextIdx]) continue;
-                pq.add(new Node(nextIdx, nextVal));
-            }
-        }
+    public static boolean isSameGroup(int a, int b) {
+        int pa = findParent(a);
+        int pb = findParent(b);
+        if(pa == pb) return true;
+        if(pa < pb) parent[pb] = pa;
+        else parent[pa] = pb;
+        return false;
     }
 
-    public static class Node implements Comparable<Node>{
-        int to, val;
-
-        public Node(int to, int val) {
-            this.to = to;
-            this.val = val;
-        }
-
-        public int compareTo(Node o){
-            return this.val - o.val;
-        }
+    public static int findParent(int a) {
+        if(parent[a] == a) return a;
+        return findParent(parent[a]);
     }
+
 }
